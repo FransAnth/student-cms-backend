@@ -1,5 +1,8 @@
 from django.db import models
 
+from classrooms.models import Classroom
+from courses.models import Course
+
 
 # Create your models here.
 class Student(models.Model):
@@ -12,3 +15,12 @@ class Student(models.Model):
     birthday = models.DateField(default=None)
     updated_at = models.DateTimeField(auto_now=True)
     enrollment_date = models.DateTimeField(auto_now_add=True)
+
+
+class StudentSchedule(models.Model):
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
