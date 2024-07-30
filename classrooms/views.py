@@ -51,3 +51,20 @@ class ClassroomApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        """
+        Delete a classroom data
+        """
+        try:
+            classroom_instance = Classroom.objects.get(id=id)
+        except Classroom.DoesNotExist:
+            return Response(
+                {"message": "Classroom does not exist"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        classroom_instance.delete()
+        return Response(
+            {"message": "Classroom successfully deleted"}, status=status.HTTP_200_OK
+        )
