@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,18 +6,11 @@ from classrooms.models import Classroom
 from classrooms.serializers import ClassroomSerializer
 
 
-# Create your views here.
 class ClassroomApiView(APIView):
 
     def get(self, request):
-        """
-        Returns the details of a classroom.
-        When id is empty, all classrooms will be returned
-        """
-
-        classroom_id = request.query_params.get("classroomId", None)
+        classroom_id = request.query_params.get("id")
         classroom_query_set = Classroom.objects.all()
-        serializer = ClassroomSerializer(classroom_query_set, many=True)
 
         try:
             if classroom_id != None:
@@ -34,10 +26,6 @@ class ClassroomApiView(APIView):
             )
 
     def post(self, request):
-        """
-        Add classroom data to the table
-        """
-
         classroom = {
             "name": request.data.get("name"),
             "code": request.data.get("code"),
@@ -53,18 +41,15 @@ class ClassroomApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
-        """
-        Delete a classroom data
-        """
         try:
-            classroom_instance = Classroom.objects.get(id=id)
+            classroom = Classroom.objects.get(id=id)
         except Classroom.DoesNotExist:
             return Response(
                 {"message": "Classroom does not exist"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        classroom_instance.delete()
+        classroom.delete()
         return Response(
             {"message": "Classroom successfully deleted"}, status=status.HTTP_200_OK
         )
