@@ -10,11 +10,15 @@ class ClassScheduleView(APIView):
 
     def get(self, request):
         class_sched_id = request.query_params.get("id")
+        classroom_id = request.query_params.get("classroomId")
         class_sched_qs = ClassSchedule.objects.all()
 
         try:
             if class_sched_id != None:
                 class_sched_qs = class_sched_qs.filter(id=class_sched_id)
+
+            elif classroom_id != None:
+                class_sched_qs = class_sched_qs.filter(classroom_id=classroom_id)
 
             serializer = ClassScheduleSerializer(class_sched_qs, many=True)
 
