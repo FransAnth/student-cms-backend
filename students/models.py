@@ -18,6 +18,7 @@ class Student(models.Model):
 
 
 class StudentSchedule(models.Model):
+    id = models.AutoField(primary_key=True)
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()

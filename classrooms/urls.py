@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views.class_sched_api_views import ClassScheduleView
-from .views.classroom_api_views import ClassroomApiView
+from .views.class_sched_views import ClassScheduleView
+from .views.classroom_views import ClassroomApiView
 
 urlpatterns = [
     path("", ClassroomApiView.as_view()),
