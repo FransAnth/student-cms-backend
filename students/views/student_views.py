@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from students.models import Student
-from students.serializers import StudentDetailsSerializer, StudentSerializer
+from students.serializers import StudentDetailsSerializer, StudentListSerializer
 
 
 class StudentView(APIView):
@@ -18,7 +18,7 @@ class StudentView(APIView):
                 serializer = StudentDetailsSerializer(student_qs, many=True)
 
             else:
-                serializer = StudentSerializer(student_qs, many=True)
+                serializer = StudentListSerializer(student_qs, many=True)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
 

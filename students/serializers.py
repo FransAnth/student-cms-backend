@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
 from classrooms.models import Classroom
-from classrooms.serializers import ClassroomSerializer
+from classrooms.serializers import ClassroomDetailsSerializer
 from courses.models import Course
 from courses.serializers import CourseSerializer
 
 from .models import Student, StudentSchedule
 
 
-class StudentSerializer(serializers.ModelSerializer):
+class StudentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ["id", "first_name", "middle_initial", "last_name", "address"]
@@ -21,9 +21,9 @@ class StudentDetailsSerializer(serializers.ModelSerializer):
 
 
 class StudentSchedSerializer(serializers.ModelSerializer):
-    classroom = ClassroomSerializer(read_only=True)
+    classroom = ClassroomDetailsSerializer(read_only=True)
     course = CourseSerializer(read_only=True)
-    student = StudentSerializer(read_only=True)
+    student = StudentDetailsSerializer(read_only=True)
     classroom_id = serializers.PrimaryKeyRelatedField(
         queryset=Classroom.objects.all(), write_only=True, source="classroom"
     )

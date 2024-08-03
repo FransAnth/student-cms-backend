@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from classrooms.models import Classroom
-from classrooms.serializers import ClassroomSerializer
+from classrooms.serializers import ClassroomDetailsSerializer, ClassroomListSerializer
 
 
 class ClassroomApiView(APIView):
@@ -15,8 +15,10 @@ class ClassroomApiView(APIView):
         try:
             if classroom_id != None:
                 classroom_query_set = classroom_query_set.filter(id=classroom_id)
+                serializer = ClassroomDetailsSerializer(classroom_query_set, many=True)
 
-            serializer = ClassroomSerializer(classroom_query_set, many=True)
+            else:
+                serializer = ClassroomListSerializer(classroom_query_set, many=True)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -32,7 +34,7 @@ class ClassroomApiView(APIView):
             "building_name": request.data.get("buildingName"),
         }
 
-        serializer = ClassroomSerializer(data=classroom)
+        serializer = ClassroomDetailsSerializer(data=classroom)
         if serializer.is_valid():
             serializer.save()
 

@@ -6,14 +6,20 @@ from courses.serializers import CourseSerializer
 from .models import Classroom, ClassSchedule
 
 
-class ClassroomSerializer(serializers.ModelSerializer):
+class ClassroomListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Classroom
+        fields = ["id", "name", "building_name", "status"]
+
+
+class ClassroomDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
         fields = "__all__"
 
 
 class ClassScheduleSerializer(serializers.ModelSerializer):
-    classroom = ClassroomSerializer(read_only=True)
+    classroom = ClassroomDetailsSerializer(read_only=True)
     course = CourseSerializer(read_only=True)
     classroom_id = serializers.PrimaryKeyRelatedField(
         queryset=Classroom.objects.all(), write_only=True, source="classroom"
