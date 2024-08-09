@@ -2,8 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from student_cms.utils.pagination import CustomPageNumberPagination
+
 from .models import Course
-from .serializers import CourseSerializer
+from .serializers import CourseDetailsSerializer, CourseListSerializer
 
 
 class CourseApiView(APIView):
@@ -11,14 +13,19 @@ class CourseApiView(APIView):
     def get(self, request):
         course_id = request.query_params.get("id")
         course_query_set = Course.objects.all()
+        paginator = CustomPageNumberPagination()
 
         try:
-            if course_id != None:
+            if course_id is not None:
                 course_query_set = course_query_set.filter(id=course_id)
+                result_page = paginator.paginate_queryset(course_query_set, request)
+                serializer = CourseDetailsSerializer(result_page, many=True)
 
-            serializer = CourseSerializer(course_query_set, many=True)
+            else:
+                result_page = paginator.paginate_queryset(course_query_set, request)
+                serializer = CourseListSerializer(result_page, many=True)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return paginator.get_paginated_response(serializer.data)
 
         except Exception as error_message:
             return Response(
@@ -32,7 +39,7 @@ class CourseApiView(APIView):
             "description": request.data.get("description"),
         }
 
-        serializer = CourseSerializer(data=course)
+        serializer = CourseDetailsSerializer(data=course)
 
         if serializer.is_valid():
             serializer.save()

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from classrooms.models import Classroom
 from classrooms.serializers import ClassroomDetailsSerializer
 from courses.models import Course
-from courses.serializers import CourseSerializer
+from courses.serializers import CourseDetailsSerializer
 
 from .models import Student, StudentSchedule
 
@@ -22,7 +22,7 @@ class StudentDetailsSerializer(serializers.ModelSerializer):
 
 class StudentSchedSerializer(serializers.ModelSerializer):
     classroom = ClassroomDetailsSerializer(read_only=True)
-    course = CourseSerializer(read_only=True)
+    course = CourseDetailsSerializer(read_only=True)
     student = StudentDetailsSerializer(read_only=True)
     classroom_id = serializers.PrimaryKeyRelatedField(
         queryset=Classroom.objects.all(), write_only=True, source="classroom"

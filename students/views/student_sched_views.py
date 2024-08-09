@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from student_cms.utils.pagination import CustomPageNumberPagination
 from students.models import StudentSchedule
 from students.serializers import StudentSchedSerializer
 
@@ -14,12 +15,17 @@ class StudentSchedView(APIView):
         """
         try:
             student_id = request.query_params.get("studentId")
-            student_sched_qs = StudentSchedule.objects.all().filter(
-                student_id=student_id
-            )
-            serializer = StudentSchedSerializer(student_sched_qs, many=True)
+            student_sched_qs = StudentSchedule.objects.all()
+            paginator = CustomPageNumberPagination()
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            if student_id is not None:
+                student_sched_qs = student_sched_qs.filter(student_id=student_id)
+
+            result_page = paginator.paginate_queryset(student_sched_qs, request)
+            serializer = StudentSchedSerializer(result_page, many=True)
+
+            return paginator.get_paginated_response(serializer.data)
+
         except Exception as error_message:
             return Response(
                 {"message": str(error_message)}, status=status.HTTP_400_BAD_REQUEST

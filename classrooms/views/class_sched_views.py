@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 from classrooms.models import ClassSchedule
 from classrooms.serializers import ClassScheduleSerializer
+from student_cms.utils.pagination import CustomPageNumberPagination
 
 
 class ClassScheduleView(APIView):
@@ -12,17 +13,19 @@ class ClassScheduleView(APIView):
         class_sched_id = request.query_params.get("id")
         classroom_id = request.query_params.get("classroomId")
         class_sched_qs = ClassSchedule.objects.all()
+        paginator = CustomPageNumberPagination()
 
         try:
-            if class_sched_id != None:
+            if class_sched_id is not None:
                 class_sched_qs = class_sched_qs.filter(id=class_sched_id)
 
-            elif classroom_id != None:
+            elif classroom_id is not None:
                 class_sched_qs = class_sched_qs.filter(classroom_id=classroom_id)
 
-            serializer = ClassScheduleSerializer(class_sched_qs, many=True)
+            result_page = paginator.paginate_queryset(class_sched_qs, request)
+            serializer = ClassScheduleSerializer(result_page, many=True)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return paginator.get_paginated_response(serializer.data)
 
         except Exception as error_message:
             return Response(

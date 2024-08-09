@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from student_cms.utils.pagination import CustomPageNumberPagination
 from students.models import Student
 from students.serializers import StudentDetailsSerializer, StudentListSerializer
 
@@ -11,16 +12,19 @@ class StudentView(APIView):
     def get(self, request):
         student_id = request.query_params.get("studentId")
         student_qs = Student.objects.all()
+        paginator = CustomPageNumberPagination()
 
         try:
-            if student_id != None:
+            if student_id is not None:
                 student_qs = student_qs.filter(id=student_id)
-                serializer = StudentDetailsSerializer(student_qs, many=True)
+                result_page = paginator.paginate_queryset(student_qs, request)
+                serializer = StudentDetailsSerializer(result_page, many=True)
 
             else:
-                serializer = StudentListSerializer(student_qs, many=True)
+                result_page = paginator.paginate_queryset(student_qs, request)
+                serializer = StudentListSerializer(result_page, many=True)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return paginator.get_paginated_response(serializer.data)
 
         except Exception as error_message:
             return Response(

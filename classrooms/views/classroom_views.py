@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 from classrooms.models import Classroom
 from classrooms.serializers import ClassroomDetailsSerializer, ClassroomListSerializer
+from student_cms.utils.pagination import CustomPageNumberPagination
 
 
 class ClassroomApiView(APIView):
@@ -11,16 +12,19 @@ class ClassroomApiView(APIView):
     def get(self, request):
         classroom_id = request.query_params.get("id")
         classroom_query_set = Classroom.objects.all()
+        paginator = CustomPageNumberPagination()
 
         try:
-            if classroom_id != None:
+            if classroom_id is not None:
                 classroom_query_set = classroom_query_set.filter(id=classroom_id)
-                serializer = ClassroomDetailsSerializer(classroom_query_set, many=True)
+                result_page = paginator.paginate_queryset(classroom_query_set, request)
+                serializer = ClassroomDetailsSerializer(result_page, many=True)
 
             else:
-                serializer = ClassroomListSerializer(classroom_query_set, many=True)
+                result_page = paginator.paginate_queryset(classroom_query_set, request)
+                serializer = ClassroomListSerializer(result_page, many=True)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return paginator.get_paginated_response(serializer.data)
 
         except Exception as error_message:
             return Response(
