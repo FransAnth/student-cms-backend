@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from classrooms.models import Classroom
 from courses.models import Course
@@ -13,8 +14,11 @@ class Student(models.Model):
     performance = models.CharField(max_length=45, default=None)
     address = models.CharField(max_length=200, default=None)
     birthday = models.DateField(default=None)
-    updated_at = models.DateTimeField(auto_now=True)
-    enrollment_date = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(default=timezone.now)
+    enrollment_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ["enrollment_date"]
 
 
 class StudentSchedule(models.Model):
@@ -25,3 +29,8 @@ class StudentSchedule(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ["created_at"]
