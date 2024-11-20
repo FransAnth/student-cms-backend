@@ -1,0 +1,8 @@
+venv/
+
+# Ignore Python cache files
+*.pyc
+__pycache__/
+
+# Ignore DB
+*.sqlite3
