@@ -5,4 +5,4 @@ venv/
 __pycache__/
 
 # Ignore DB
-*.sqlite3
+db.sqlite3
