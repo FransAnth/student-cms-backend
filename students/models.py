@@ -11,7 +11,7 @@ class Student(models.Model):
     first_name = models.CharField(max_length=90, default=None)
     middle_initial = models.CharField(max_length=5, default=None)
     last_name = models.CharField(max_length=90, default=None)
-    performance = models.CharField(max_length=45, default=None)
+    performance = models.CharField(max_length=45, default="Not set")
     address = models.CharField(max_length=200, default=None)
     birthday = models.DateField(default=None)
     updated_at = models.DateTimeField(default=timezone.now)
