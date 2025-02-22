@@ -32,13 +32,7 @@ class ClassroomApiView(APIView):
             )
 
     def post(self, request):
-        classroom = {
-            "name": request.data.get("name"),
-            "code": request.data.get("code"),
-            "building_name": request.data.get("buildingName"),
-        }
-
-        serializer = ClassroomDetailsSerializer(data=classroom)
+        serializer = ClassroomDetailsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
 

@@ -2,23 +2,24 @@ from rest_framework import serializers
 
 from courses.models import Course
 from courses.serializers import CourseDetailsSerializer
+from student_cms.utils.camel_case_serializer import CamelCaseSerializer
 
 from .models import Classroom, ClassSchedule
 
 
-class ClassroomListSerializer(serializers.ModelSerializer):
+class ClassroomListSerializer(CamelCaseSerializer):
     class Meta:
         model = Classroom
         fields = ["id", "name", "building_name", "status"]
 
 
-class ClassroomDetailsSerializer(serializers.ModelSerializer):
+class ClassroomDetailsSerializer(CamelCaseSerializer):
     class Meta:
         model = Classroom
         fields = "__all__"
 
 
-class ClassScheduleSerializer(serializers.ModelSerializer):
+class ClassScheduleSerializer(CamelCaseSerializer):
     classroom = ClassroomDetailsSerializer(read_only=True)
     course = CourseDetailsSerializer(read_only=True)
     classroom_id = serializers.PrimaryKeyRelatedField(

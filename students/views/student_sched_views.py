@@ -32,16 +32,7 @@ class StudentSchedView(APIView):
             )
 
     def post(self, request):
-        student_schedule = {
-            "date": request.data.get("date"),
-            "start_time": request.data.get("startTime"),
-            "end_time": request.data.get("endTime"),
-            "student_id": request.data.get("studentId"),
-            "course_id": request.data.get("courseId"),
-            "classroom_id": request.data.get("classroomId"),
-        }
-
-        serializer = StudentSchedSerializer(data=student_schedule)
+        serializer = StudentSchedSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
 

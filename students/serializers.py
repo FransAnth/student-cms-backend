@@ -4,23 +4,24 @@ from classrooms.models import Classroom
 from classrooms.serializers import ClassroomDetailsSerializer
 from courses.models import Course
 from courses.serializers import CourseDetailsSerializer
+from student_cms.utils.camel_case_serializer import CamelCaseSerializer
 
 from .models import Student, StudentSchedule
 
 
-class StudentListSerializer(serializers.ModelSerializer):
+class StudentListSerializer(CamelCaseSerializer):
     class Meta:
         model = Student
         fields = ["id", "first_name", "middle_initial", "last_name", "address"]
 
 
-class StudentDetailsSerializer(serializers.ModelSerializer):
+class StudentDetailsSerializer(CamelCaseSerializer):
     class Meta:
         model = Student
         fields = "__all__"
 
 
-class StudentSchedSerializer(serializers.ModelSerializer):
+class StudentSchedSerializer(CamelCaseSerializer):
     classroom = ClassroomDetailsSerializer(read_only=True)
     course = CourseDetailsSerializer(read_only=True)
     student = StudentDetailsSerializer(read_only=True)

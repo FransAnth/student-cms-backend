@@ -32,21 +32,8 @@ class StudentView(APIView):
             )
 
     def post(self, request):
-        student_data = {
-            "first_name": request.data.get("firstName"),
-            "middle_initial": request.data.get("middleInitial"),
-            "last_name": request.data.get("lastName"),
-            "performance": request.data.get("performance", None),
-            "address": request.data.get("address"),
-            "birthday": request.data.get("birthday"),
-        }
+        serializer = StudentDetailsSerializer(data=request.data)
 
-        # Removing None values in data
-        filtered_data = {
-            key: value for key, value in student_data.items() if value is not None
-        }
-
-        serializer = StudentDetailsSerializer(data=filtered_data)
         if serializer.is_valid():
             serializer.save()
 
