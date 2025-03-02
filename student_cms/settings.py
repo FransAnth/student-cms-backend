@@ -82,8 +82,12 @@ WSGI_APPLICATION = "student_cms.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "student_cms",
+        "USER": "postgres",
+        "PASSWORD": "francis12345",
+        "HOST": "localhost",  # Set to your database server's hostname or IP
+        "PORT": "5432",  # Default PostgreSQL port
     }
 }
 

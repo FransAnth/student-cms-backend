@@ -12,7 +12,7 @@ class CourseApiView(APIView):
 
     def get(self, request):
         course_id = request.query_params.get("id")
-        course_query_set = Course.objects.all()
+        course_query_set = Course.objects.all().order_by("-created_at")
         paginator = CustomPageNumberPagination()
 
         try:

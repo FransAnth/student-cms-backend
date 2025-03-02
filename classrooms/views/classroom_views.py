@@ -11,7 +11,7 @@ class ClassroomApiView(APIView):
 
     def get(self, request):
         classroom_id = request.query_params.get("id")
-        classroom_query_set = Classroom.objects.all()
+        classroom_query_set = Classroom.objects.all().order_by("-created_at")
         paginator = CustomPageNumberPagination()
 
         try:

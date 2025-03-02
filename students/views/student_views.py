@@ -11,7 +11,7 @@ class StudentView(APIView):
 
     def get(self, request):
         student_id = request.query_params.get("studentId")
-        student_qs = Student.objects.all()
+        student_qs = Student.objects.all().order_by("-enrollment_date")
         paginator = CustomPageNumberPagination()
 
         try:

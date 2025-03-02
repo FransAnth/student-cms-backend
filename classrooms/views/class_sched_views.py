@@ -12,7 +12,7 @@ class ClassScheduleView(APIView):
     def get(self, request):
         class_sched_id = request.query_params.get("id")
         classroom_id = request.query_params.get("classroomId")
-        class_sched_qs = ClassSchedule.objects.all()
+        class_sched_qs = ClassSchedule.objects.all().order_by("-created_at")
         paginator = CustomPageNumberPagination()
 
         try:

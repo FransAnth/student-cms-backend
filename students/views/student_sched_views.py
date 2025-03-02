@@ -15,7 +15,7 @@ class StudentSchedView(APIView):
         """
         try:
             student_id = request.query_params.get("studentId")
-            student_sched_qs = StudentSchedule.objects.all()
+            student_sched_qs = StudentSchedule.objects.all().order_by("-created_at")
             paginator = CustomPageNumberPagination()
 
             if student_id is not None:
