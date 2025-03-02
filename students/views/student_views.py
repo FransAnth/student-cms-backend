@@ -10,19 +10,19 @@ from students.serializers import StudentDetailsSerializer, StudentListSerializer
 class StudentView(APIView):
 
     def get(self, request):
-        student_id = request.query_params.get("studentId")
-        student_qs = Student.objects.all().order_by("-enrollment_date")
-        paginator = CustomPageNumberPagination()
-
         try:
-            if student_id is not None:
-                student_qs = student_qs.filter(id=student_id)
-                result_page = paginator.paginate_queryset(student_qs, request)
-                serializer = StudentDetailsSerializer(result_page, many=True)
+            student_id = request.query_params.get("id")
+            if student_id:
+                student_qs = Student.objects.filter(id=student_id)
+                serializer_class = StudentDetailsSerializer
 
             else:
-                result_page = paginator.paginate_queryset(student_qs, request)
-                serializer = StudentListSerializer(result_page, many=True)
+                student_qs = Student.objects.order_by("-enrollment_date")
+                serializer_class = StudentListSerializer
+
+            paginator = CustomPageNumberPagination()
+            result_page = paginator.paginate_queryset(student_qs, request)
+            serializer = serializer_class(result_page, many=True)
 
             return paginator.get_paginated_response(serializer.data)
 

@@ -11,19 +11,19 @@ from .serializers import CourseDetailsSerializer, CourseListSerializer
 class CourseApiView(APIView):
 
     def get(self, request):
-        course_id = request.query_params.get("id")
-        course_query_set = Course.objects.all().order_by("-created_at")
-        paginator = CustomPageNumberPagination()
-
         try:
-            if course_id is not None:
-                course_query_set = course_query_set.filter(id=course_id)
-                result_page = paginator.paginate_queryset(course_query_set, request)
-                serializer = CourseDetailsSerializer(result_page, many=True)
+            course_id = request.query_params.get("id")
 
+            if course_id:
+                course_query_set = Course.objects.filter(id=course_id)
+                serializer_class = CourseDetailsSerializer
             else:
-                result_page = paginator.paginate_queryset(course_query_set, request)
-                serializer = CourseListSerializer(result_page, many=True)
+                course_query_set = Course.objects.order_by("-created_at")
+                serializer_class = CourseListSerializer
+
+            paginator = CustomPageNumberPagination()
+            result_page = paginator.paginate_queryset(course_query_set, request)
+            serializer = serializer_class(result_page, many=True)
 
             return paginator.get_paginated_response(serializer.data)
 

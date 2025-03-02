@@ -14,13 +14,13 @@ class StudentSchedView(APIView):
         Getting the schedule of a specific student
         """
         try:
-            student_id = request.query_params.get("studentId")
-            student_sched_qs = StudentSchedule.objects.all().order_by("-created_at")
-            paginator = CustomPageNumberPagination()
+            student_id = request.query_params.get("id")
+            student_sched_qs = StudentSchedule.objects.order_by("-created_at")
 
-            if student_id is not None:
+            if student_id:
                 student_sched_qs = student_sched_qs.filter(student_id=student_id)
 
+            paginator = CustomPageNumberPagination()
             result_page = paginator.paginate_queryset(student_sched_qs, request)
             serializer = StudentSchedSerializer(result_page, many=True)
 

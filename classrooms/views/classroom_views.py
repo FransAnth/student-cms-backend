@@ -10,19 +10,19 @@ from student_cms.utils.pagination import CustomPageNumberPagination
 class ClassroomApiView(APIView):
 
     def get(self, request):
-        classroom_id = request.query_params.get("id")
-        classroom_query_set = Classroom.objects.all().order_by("-created_at")
-        paginator = CustomPageNumberPagination()
-
         try:
-            if classroom_id is not None:
-                classroom_query_set = classroom_query_set.filter(id=classroom_id)
-                result_page = paginator.paginate_queryset(classroom_query_set, request)
-                serializer = ClassroomDetailsSerializer(result_page, many=True)
+            classroom_id = request.query_params.get("id")
+            if classroom_id:
+                classroom_query_set = Classroom.objects.filter(id=classroom_id)
+                serializer_class = ClassroomDetailsSerializer
 
             else:
-                result_page = paginator.paginate_queryset(classroom_query_set, request)
-                serializer = ClassroomListSerializer(result_page, many=True)
+                classroom_query_set = Classroom.objects.order_by("-created_at")
+                serializer_class = ClassroomListSerializer
+
+            paginator = CustomPageNumberPagination()
+            result_page = paginator.paginate_queryset(classroom_query_set, request)
+            serializer = serializer_class(result_page, many=True)
 
             return paginator.get_paginated_response(serializer.data)
 
