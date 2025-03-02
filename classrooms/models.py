@@ -17,6 +17,7 @@ class Classroom(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+        db_table = "classrooms"
 
 
 class ClassSchedule(models.Model):
@@ -31,3 +32,4 @@ class ClassSchedule(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+        db_table = "classroom_scheds"

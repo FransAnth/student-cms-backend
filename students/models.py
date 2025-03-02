@@ -19,6 +19,7 @@ class Student(models.Model):
 
     class Meta:
         ordering = ["enrollment_date"]
+        db_table = "students"
 
 
 class StudentSchedule(models.Model):
@@ -34,3 +35,4 @@ class StudentSchedule(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+        db_table = "student_scheds"
